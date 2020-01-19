@@ -9,7 +9,7 @@ select l.inci_id case_id,
 	rtrim(c.ucr_code) ucr_code,
 	upper(u.ucr_categ) ucr_cat,
 	upper(u.ucr_group) ucr_group,
-	rtrim(l.reportedas),
+	rtrim(l.reportedas) reported_as,
 	(select rtrim(descriptn) from RMSReporting.dbo.systab2 x where x.code_agcy = l.csstatus and x.code_key = 'CASS') case_status,
 	l.csstatus, 
 	(select case when x.descriptn = 'NO BIAS' then null else x.descriptn end from RMSReporting.dbo.systab2 x where c.hatebias = x.code_agcy and x.code_key = 'MOTI') bias,
@@ -23,7 +23,7 @@ select l.inci_id case_id,
 		for json path
 	), '[]') vic_lst,
 	rtrim(l.tract) beat,
-	rtrim(n.name) neighborhdood,
+	rtrim(n.name) neighborhood,
 	l.geox / 100.0 geox,
 	l.geoy / 100.0 geoy
 

@@ -1,4 +1,4 @@
-declare @year int = 2016
+declare @year int = 2014
 
 
 select 
@@ -18,13 +18,15 @@ select
 	case when firstdtm is not null then 1 else 0 end disp,
 	case when firstarrv is not null then 1 else 0 end arrv,
 	geox, geoy, rtrim(geolwbt) beat,
+	rtrim(n.name) neighborhood,
 	(select x.inci_id, x.agency, x.calltime, x.nature, x.callsource from CADReporting.dbo.inmain x where inci_id = i.parent_id and i.parent_id != '' for json path, without_array_wrapper) parent_call,
 	case when primeunit = '' then null else '_' + rtrim(primeunit) end primeunit,
 	(select count(distinct unitcode) from CADReporting.dbo.incilog x where x.inci_id = i.inci_id and x.transtype = 'D') units_dispd,
 	(select count(distinct unitcode) from CADReporting.dbo.incilog x where x.inci_id = i.inci_id and x.transtype = 'C') units_arrived
 
 from CADReporting.dbo.inmain i
-
+left join PSJReporting.CLCC.geom_neighbor n
+on geometry::Point(i.geox, i.geoy, 2914).STWithin(n.geom) = 1
 where year(calltime) = @year
 and rtrim(agency) = 'EPD'
 and rtrim(service) = 'LAW'
