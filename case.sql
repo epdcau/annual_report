@@ -1,7 +1,9 @@
-declare @year int = 2018
+declare @year int = 2019
 
 
-select l.inci_id case_id, 
+select
+	year(l.date_occu) yr, 
+	l.inci_id case_id, 
 	c.chrgcnt charge_seq,
 	rtrim(c.chrgdesc) charge, 
 	--(select inci_id from CADReporting.dbo.inmain x where x.case_id = l.inci_id and x.case_id != '' and x.agency = 'EPD' for json path) inci_id,
